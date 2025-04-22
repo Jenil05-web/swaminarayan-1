@@ -7,22 +7,22 @@
     window.onload = function() {
       // Parse URL query parameters.
       const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");       // Not used further, but could be logged or used for debugging.
+      const token = urlParams.get("token");
       const expiry = parseInt(urlParams.get("expiry"), 10);
-
-      // Check if the required parameters exist.
+      
+      // Ensure required parameters exist.
       if (!token || !expiry) {
         document.body.innerHTML = "<p>Error: Invalid QR code parameters.</p>";
         return;
       }
       
-      const currentTime = Date.now();
-      // If the current time is greater than the expiry, the QR code is expired.
-      if (currentTime > expiry) {
+      // Check if the current time is less than the expiry.
+      if (Date.now() > expiry) {
         document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
       } else {
-        // The QR is still valid; redirect to your Google Form.
-        window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform?usp=header";
+        // Redirect to your Google Form if the code is still valid.
+        window.location.href =
+          "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform?usp=sf_link";
       }
     };
   </script>
