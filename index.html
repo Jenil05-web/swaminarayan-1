@@ -6,7 +6,7 @@
   <!-- Include the QRCode.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    <center>
+    
     // Generate a random token.
     function generateToken() {
       return Math.random().toString(36).substr(2, 9);
@@ -47,7 +47,7 @@
       generateQRCode();
       setInterval(generateQRCode, 20000);
     };
-  </center>
+  
   </script>
 </head>
 <body>
