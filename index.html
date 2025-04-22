@@ -1,50 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Dynamic QR Code for Google Form</title>
+  <!-- Include the QRCode.js library from a CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Array referencing QR images in the repository root
-    const qrVersions = [
-      "frame1.png",
-      "frame2.png",
-      "frame3.png",
-      "frame4.png"
-    ];
+    // Function to generate a new QR code
+    function generateQRCode() {
+      const qrContainer = document.getElementById('qrContainer');
+      
+      // Clear any previous QR code from the container
+      qrContainer.innerHTML = "";
 
-    // Function to rotate the QR code image
-    function rotateQR() {
-      // Retrieve the current index from localStorage or default to 0
-      let currentIndex = localStorage.getItem('qrIndex') || 0;
-      currentIndex = parseInt(currentIndex);
+      // Append a timestamp (or any dynamic parameter) if you want it to differ each refresh.
+      // This is optional. If you want the URL to remain constant, remove "?t=" + timeStamp.
+      const timeStamp = new Date().getTime();
+      const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform?usp=sf_link&t=" + timeStamp;
 
-      // Update the index to the next QR code (wrap around if needed)
-      currentIndex = (currentIndex + 1) % qrVersions.length;
-      localStorage.setItem('qrIndex', currentIndex);
-
-      // Update the displayed QR code image
-      document.getElementById('qrCode').src = qrVersions[currentIndex];
+      // Generate the new QR code inside the container with the desired dimensions
+      new QRCode(qrContainer, {
+        text: formURL,
+        width: 200,
+        height: 200,
+        correctLevel: QRCode.CorrectLevel.H  // High error correction level
+      });
     }
 
-    window.onload = function() {
-      // Set the initial QR code on page load
-      let currentIndex = localStorage.getItem('qrIndex') || 0;
-      document.getElementById('qrCode').src = qrVersions[currentIndex];
+    // Function to refresh the QR code
+    function refreshQRCode() {
+      generateQRCode();
+    }
 
-      // Auto-refresh the QR code every 10 seconds (10000 milliseconds)
-      setInterval(rotateQR, 10000);
+    // When the page loads, generate the initial QR code and set up a refresh timer
+    window.onload = function() {
+      generateQRCode();
+      // Refresh the QR code every 10 seconds (adjust as needed)
+      setInterval(refreshQRCode, 10000);
     };
   </script>
 </head>
 <body>
   <h1>Dynamic QR Code for Google Form</h1>
-  
-  <!-- The anchor wraps the image, so when scanned it directs to your Google Form -->
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform?usp=sf_link" target="_blank">
-    <img id="qrCode" width="200" alt="QR Code">
-  </a>
-  
+  <p>This dynamically generated QR code refreshes every 10 seconds.</p>
+  <!-- This container will hold the dynamically generated QR code -->
+  <div id="qrContainer"></div>
   <!-- Optional: A manual refresh button -->
-  <br>
-  <button onclick="rotateQR()">Manual Refresh</button>
+  <button onclick="refreshQRCode()">Manual Refresh</button>
+  <p>
+    Scan the code with your mobile device, and you'll open the linked Google Form.
+  </p>
 </body>
 </html>
