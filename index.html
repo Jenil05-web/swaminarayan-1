@@ -6,12 +6,12 @@
   <!-- Include the QRCode.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Function to generate a random token.
+    // Generate a random token.
     function generateToken() {
       return Math.random().toString(36).substr(2, 9);
     }
     
-    // Function to generate the QR code.
+    // Generate the QR code.
     function generateQRCode() {
       const qrContainer = document.getElementById("qrContainer");
       qrContainer.innerHTML = ""; // Clear any previous QR code
@@ -20,19 +20,14 @@
       // Set expiry time: 20 seconds from now.
       const expiry = Date.now() + 20000;
       
-      // Generate an absolute URL.
-      // window.location.origin returns "https://yourusername.github.io"
-      // window.location.pathname returns "/repositoryName/" (if hosted as a project page)
-      let baseUrl = window.location.origin + window.location.pathname;
-      // Make sure the base URL ends with a slash.
-      if (!baseUrl.endsWith("/")) {
-         baseUrl += "/";
-      }
+      // Hardcode the base URL of your GitHub Pages site.
+      // Replace <yourusername> and <repository> with your actual values.
+      const baseUrl = "https://<yourusername>.github.io/<repository>/";
       
       // Create the absolute URL for scan.html.
       const scanURL = baseUrl + "scan.html?token=" + token + "&expiry=" + expiry;
       
-      // Optional: Display the expiry time for feedback.
+      // Optionally display the expiry time for debugging.
       document.getElementById('expiryDisplay').innerText =
         "Expires at: " + new Date(expiry).toLocaleTimeString();
       
@@ -43,9 +38,10 @@
         height: 200,
         correctLevel: QRCode.CorrectLevel.H
       });
+      
+      console.log("Generated QR Code URL:", scanURL); // Debugging: check the URL in console
     }
     
-    // Generate a fresh QR code on page load and every 20 seconds.
     window.onload = function() {
       generateQRCode();
       setInterval(generateQRCode, 20000);
@@ -54,8 +50,10 @@
 </head>
 <body>
   <h1>Dynamic One-Time QR Code Display</h1>
-  <p>Scan the QR code with your mobile device to open the Google Form.<br>
-  (The QR code is valid for 20 seconds only.)</p>
+  <p>
+    Scan the QR code with your mobile device to open the Google Form.
+    (The QR code is valid for 20 seconds only.)
+  </p>
   <div id="qrContainer"></div>
   <p id="expiryDisplay"></p>
 </body>
