@@ -2,83 +2,54 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Dynamic One-Time QR Code</title>
-  <!-- Include the QRCode.js library from a CDN -->
+  <title>Dynamic One-Time QR Code Display</title>
+  <!-- Include the QRCode.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    let currentToken = null;
-    
-    // Generates a random token (for uniqueness)
+    // Generate a simple random token.
     function generateToken() {
       return Math.random().toString(36).substr(2, 9);
     }
-
-    // Generates a new QR code based on the Google Form URL and appends a unique token
+    
+    // Generate a QR code with a unique token and an expiry timestamp.
     function generateQRCode() {
-      const qrContainer = document.getElementById('qrContainer');
-      qrContainer.innerHTML = ""; // Clear previous QR code
+      const qrContainer = document.getElementById("qrContainer");
+      qrContainer.innerHTML = ""; // Clear any previous QR code
       
-      // Create a new unique token for this QR code
-      currentToken = generateToken();
+      const token = generateToken();
+      // Set an expiry time 20 seconds from now (in milliseconds since epoch)
+      const expiry = Date.now() + 20000;  
       
-      // Append the token as a URL parameter.
-      // (This helps simulate that each QR is one-time / unique.)
-      const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform?token=" + currentToken;
-
-      // Generate the QR code with the unique URL
+      // Build the URL for scan.html including the token and expiry parameters.
+      const scanURL = window.location.origin + "/scan.html?token=" + token + "&expiry=" + expiry;
+      
+      // Display the expiry time for debugging/visual feedback; optional.
+      document.getElementById('expiryDisplay').innerText =
+        "Expires at: " + new Date(expiry).toLocaleTimeString();
+      
+      // Generate the QR code for the URL.
       new QRCode(qrContainer, {
-        text: formURL,
+        text: scanURL,
         width: 200,
         height: 200,
-        correctLevel: QRCode.CorrectLevel.H  // High error correction
+        correctLevel: QRCode.CorrectLevel.H
       });
-      
-      // Update the clickable link (anchor) to use the new URL
-      document.getElementById('qrLink').href = formURL;
     }
-
-    // Refreshes the QR code: call generateQRCode()
-    function refreshQRCode() {
-      generateQRCode();
-    }
-
-    // Called when a QR code is "scanned" (simulated here by a tap or click)
-    function onQRCodeScanned() {
-      // "Disable" the current QR code by invalidating the link.
-      document.getElementById('qrLink').href = "#disabled";
-      
-      // Optionally, display a message indicating the code was used.
-      document.getElementById('qrContainer').innerHTML = "<p style='font-family: sans-serif;'>QR code scanned. Generating new code…</p>";
-      
-      // After a short delay, generate a new QR code.
-      setTimeout(refreshQRCode, 1000);
-    }
-
+    
     window.onload = function() {
       generateQRCode();
-      
-      // Optional: Auto-refresh the QR code every 10 seconds.
-      // Remove the next line if you want to change the code only when scanned.
-      setInterval(refreshQRCode, 10000);
-
-      // Add an event listener to simulate scanning.
-      // When the container is clicked/tapped, it simulates that the QR was scanned.
-      document.getElementById('qrContainer').addEventListener('click', onQRCodeScanned);
+      // Refresh (regenerate) the QR code every 20 seconds.
+      setInterval(generateQRCode, 20000);
     };
   </script>
 </head>
 <body>
-  <h1>Dynamic One-Time QR Code for Google Form</h1>
-  <p>The QR code below is generated dynamically and auto-refreshes. When tapped (simulating a scan), the current code is disabled and replaced with a new one.</p>
-  
-  <!-- The anchor tag makes the QR code clickable. -->
-  <a id="qrLink" target="_blank">
-    <div id="qrContainer"></div>
-  </a>
-  
-  <!-- Optional manual refresh button -->
-  <button onclick="refreshQRCode()">Manual Refresh</button>
-  
-  <p>Use your mobile device to scan the QR. Each QR code is unique and will be replaced once scanned.</p>
+  <h1>Dynamic One-Time QR Code Display</h1>
+  <p>
+    Scan the QR code with your mobile device to open the Google Form.
+    The QR code will expire after 20 seconds.
+  </p>
+  <div id="qrContainer"></div>
+  <p id="expiryDisplay"></p>
 </body>
 </html>
