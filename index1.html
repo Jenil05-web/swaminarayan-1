@@ -5,9 +5,9 @@
   <title>QR Code Scan</title>
   <script>
     window.onload = function() {
-      // Get the URL parameters.
+      // Parse URL query parameters.
       const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");
+      const token = urlParams.get("token");       // Not used further, but could be logged or used for debugging.
       const expiry = parseInt(urlParams.get("expiry"), 10);
 
       // Check if the required parameters exist.
@@ -17,19 +17,17 @@
       }
       
       const currentTime = Date.now();
-      // Compare the current time with the expiry.
+      // If the current time is greater than the expiry, the QR code is expired.
       if (currentTime > expiry) {
-        // The QR code has expired.
         document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
       } else {
-        // QR code is valid; redirect to the Google Form.
-        window.location.href =
-          "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform?usp=sf_link";
+        // The QR is still valid; redirect to your Google Form.
+        window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform?usp=sf_link";
       }
     };
   </script>
 </head>
 <body>
-  <p>Processing your scan... Please wait.</p>
+  <p>Processing your scan... please wait.</p>
 </body>
 </html>
