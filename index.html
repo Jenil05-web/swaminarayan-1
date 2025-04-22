@@ -3,40 +3,29 @@
 <head>
     <title>Dynamic QR Code</title>
     <script>
-        // Array of your different QR code image URLs
-        const qrVersions = [
-            "frame 1.png",
-            "frame 2.png",
-            "frame 3.png",
-            "frame 4.png"
-        ];
-        
-        // Function to rotate QR code
+        const qrVersions = ["images/frame1.png", "images/frame2.png", "images/frame3.png", "images/frame4.png"];
+
         function rotateQR() {
-            // Get current index from localStorage or start at 0
             let currentIndex = localStorage.getItem('qrIndex') || 0;
             currentIndex = parseInt(currentIndex);
-            
-            // Update to next version (loop back to 0 if at end)
+
             currentIndex = (currentIndex + 1) % qrVersions.length;
-            
-            // Save new index
+
             localStorage.setItem('qrIndex', currentIndex);
-            
-            // Update the displayed image
+
             document.getElementById('qrCode').src = qrVersions[currentIndex];
         }
-        
-        // Initialize on page load
+
         window.onload = function() {
-            rotateQR();
-            // Redirect immediately to your Google Form
-            window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform?usp=header";
+            let currentIndex = localStorage.getItem('qrIndex') || 0;
+            document.getElementById('qrCode').src = qrVersions[currentIndex];
         };
     </script>
 </head>
 <body>
-    <!-- This image will change but won't be visible due to immediate redirect -->
-    <img id="qrCode" style="display:none;">
+    <h1>Scan the QR Code</h1>
+    <img id="qrCode" width="200">
+    <br>
+    <button onclick="rotateQR()">Refresh QR Code</button>
 </body>
 </html>
