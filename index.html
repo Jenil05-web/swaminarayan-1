@@ -6,28 +6,28 @@
   <!-- Include the QRCode.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Generate a simple random token.
+    // Generates a random token for uniqueness.
     function generateToken() {
       return Math.random().toString(36).substr(2, 9);
     }
     
-    // Generate a QR code with a unique token and an expiry timestamp.
+    // Generates a QR code with a unique token and expiry timestamp.
     function generateQRCode() {
       const qrContainer = document.getElementById("qrContainer");
       qrContainer.innerHTML = ""; // Clear any previous QR code
       
       const token = generateToken();
-      // Set an expiry time 20 seconds from now (in milliseconds since epoch)
-      const expiry = Date.now() + 20000;  
+      // Set expiry time to 20 seconds from now (milliseconds)
+      const expiry = Date.now() + 20000;
       
-      // Build the URL for scan.html including the token and expiry parameters.
+      // Build the URL for scan.html including the token and expiry.
       const scanURL = window.location.origin + "/scan.html?token=" + token + "&expiry=" + expiry;
       
-      // Display the expiry time for debugging/visual feedback; optional.
+      // Optional: Display the expiry time for visual feedback.
       document.getElementById('expiryDisplay').innerText =
         "Expires at: " + new Date(expiry).toLocaleTimeString();
       
-      // Generate the QR code for the URL.
+      // Generate the QR code using the library.
       new QRCode(qrContainer, {
         text: scanURL,
         width: 200,
@@ -36,19 +36,16 @@
       });
     }
     
+    // On page load, generate the QR code and refresh it every 20 seconds.
     window.onload = function() {
       generateQRCode();
-      // Refresh (regenerate) the QR code every 20 seconds.
       setInterval(generateQRCode, 20000);
     };
   </script>
 </head>
 <body>
   <h1>Dynamic One-Time QR Code Display</h1>
-  <p>
-    Scan the QR code with your mobile device to open the Google Form.
-    The QR code will expire after 20 seconds.
-  </p>
+  <p>Scan the QR code with your mobile device to open the Google Form (Google Docs link). The QR code is valid for 20 seconds only.</p>
   <div id="qrContainer"></div>
   <p id="expiryDisplay"></p>
 </body>
