@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Scan</title>
+  <script>
+    window.onload = function() {
+      // Parse URL query parameters.
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+      const expiry = parseInt(urlParams.get("expiry"), 10);
+      
+      // Ensure required parameters exist.
+      if (!token || !expiry) {
+        document.body.innerHTML = "<p>Error: Invalid QR code parameters.</p>";
+        return;
+      }
+      
+      // Check if the current time is less than the expiry.
+      if (Date.now() > expiry) {
+        document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
+      } else {
+        // Define new Google Form link.
+        const newFormUrl = "https://docs.google.com/forms/d/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/edit";
+
+        // Generate QR code and display it.
+        document.body.innerHTML = `<p>Scan the QR code below to access the form:</p>
+          <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(newFormUrl)}" alt="QR Code">`;
+      }
+    };
+  </script>
+</head>
+<body>
+  <p>Processing your scan... please wait.</p>
+</body>
+</html>
