@@ -6,16 +6,22 @@
   <!-- Include the QRCode.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Constant Google Form URLs (these remain the same)
+    // Constant Google Form URLs for the two QR codes
     const formUrl1 = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform";
     const formUrl2 = "https://docs.google.com/forms/d/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/edit";
 
-    // Helper function that creates a new child element inside a container and generates a QR code in it.
-    function createQRCode(containerId, url) {
+    // Function to completely clear a container and generate a new child for the QR code
+    function generateQRCodeFor(containerId, url) {
       const container = document.getElementById(containerId);
-      // Replace container content with a new child div
-      container.innerHTML = "<div id='" + containerId + "-child'></div>";
-      new QRCode(document.getElementById(containerId + "-child"), {
+      // Remove all existing children
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+      // Create a new div element for the QR code
+      const newDiv = document.createElement("div");
+      container.appendChild(newDiv);
+      // Generate the QR code inside the new div
+      new QRCode(newDiv, {
         text: url,
         width: 200,
         height: 200,
@@ -23,36 +29,35 @@
       });
     }
 
-    // Function to generate (or regenerate) both QR codes.
+    // Function to generate both QR codes and update the refresh time display
     function generateQRCodes() {
-      // Generate (or replace) the first and second QR codes.
-      createQRCode("qrContainer1", formUrl1);
-      createQRCode("qrContainer2", formUrl2);
+      // Regenerate both QR codes
+      generateQRCodeFor("qrContainer1", formUrl1);
+      generateQRCodeFor("qrContainer2", formUrl2);
 
-      // Display when the QR codes will refresh next.
+      // Update refresh time message
       const nextRefresh = new Date(Date.now() + 20000);
       document.getElementById("expiryDisplay").innerText =
         "QR codes will refresh at: " + nextRefresh.toLocaleTimeString();
 
-      console.log("QR codes regenerated for URLs:", formUrl1, formUrl2);
+      console.log("QR codes regenerated at", new Date().toLocaleTimeString());
     }
 
-    window.onload = function() {
-      generateQRCodes(); // Initial generation
-      setInterval(generateQRCodes, 20000); // Regenerate every 20 seconds
-    };
+    // When the window loads, generate the QR codes immediately and then every 20 seconds
+    window.addEventListener("load", function() {
+      generateQRCodes();
+      setInterval(generateQRCodes, 20000);
+    });
   </script>
 </head>
 <body>
   <h1>Scan Here for Entry Details</h1>
-  <p>Scan the QR codes below:</p>
-
   <h3>Existing QR Code</h3>
   <div id="qrContainer1"></div>
 
   <h3>New QR Code</h3>
   <div id="qrContainer2"></div>
-
+  
   <p id="expiryDisplay"></p>
 </body>
 </html>
