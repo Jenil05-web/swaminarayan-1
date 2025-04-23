@@ -4,41 +4,31 @@
   <meta charset="UTF-8">
   <title>QR Code Scan</title>
   <script>
-    window.addEventListener("load", function() {
+    window.onload = function() {
       // Parse URL query parameters.
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get("token");
-      const expiryStr = params.get("expiry");
-
-      // Ensure both token and expiry exist and expiry is valid.
-      if (!token || !expiryStr || isNaN(parseInt(expiryStr, 10))) {
-        document.body.innerHTML = "<p>Error: Missing or invalid scan parameters.</p>";
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+      const expiry = parseInt(urlParams.get("expiry"), 10);
+      
+      // Ensure required parameters exist.
+      if (!token || !expiry) {
+        document.body.innerHTML = "<p>Error: Invalid QR code parameters.</p>";
         return;
       }
-
-      // Convert the expiry parameter to a number.
-      const expiry = parseInt(expiryStr, 10);
-      const now = Date.now();
-
-      console.log("Current time:", now, "Expiry time:", expiry);
-
-      // Check if the current time has exceeded the expiry time.
-      if (now > expiry) {
-        // If expired, show an error message and do not redirect.
+      
+      // Check if the current time is less than the expiry.
+      if (Date.now() > expiry) {
         document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
       } else {
-        // If the QR code is still valid, show a message and then redirect.
-        document.body.innerHTML = "<p>QR code is valid. Redirecting to the form...</p>";
+        // Define the new Google Form link.
+        const newFormUrl = "https://docs.google.com/forms/d/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/edit";
 
-        // Replace formUrl with your desired Google Form link.
-        const formUrl = "https://docs.google.com/forms/d/e/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/viewform";
-        
-        // Redirect after a short delay.
-        setTimeout(() => {
-          window.location.href = formUrl;
-        }, 1500);
+        // Generate QR code and display it.
+        document.body.innerHTML = `<p>Scan the QR code below to access the form:</p>
+          <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(newFormUrl)}" alt="QR Code">
+          <p>If the QR code doesn't work, click <a href="${newFormUrl}">here</a> to access the form.</p>`;
       }
-    });
+    };
   </script>
 </head>
 <body>
