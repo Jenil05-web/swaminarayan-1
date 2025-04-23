@@ -2,58 +2,70 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Dynamic Expiring QR Code</title>
+  <title>Scan Here to exit the Chatralay</title>
   <!-- Include the QRCode.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Function to generate a random token.
+    // Generate a random token.
     function generateToken() {
       return Math.random().toString(36).substr(2, 9);
     }
 
-    // Function to generate the QR code.
-    function generateQRCode() {
-      const qrContainer = document.getElementById("qrContainer");
-      qrContainer.innerHTML = ""; // Clear the previous QR code
+    // Generate the QR codes.
+    function generateQRCodes() {
+      const qrContainer1 = document.getElementById("qrContainer1");
+      const qrContainer2 = document.getElementById("qrContainer2");
+      qrContainer1.innerHTML = ""; // Clear previous QR code
+      qrContainer2.innerHTML = ""; // Clear previous QR code
 
-      // Generate a new token and set the expiry (20 seconds from now).
       const token = generateToken();
-      const expiry = Date.now() + 20000; // 20 seconds
+      const expiry = Date.now() + 20000;
 
-      // Define the constant base Google Form URL.
-      const baseFormUrl = "https://docs.google.com/forms/d/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/edit";
-      
-      // Create the dynamic URL by appending token and expiry (even though the base remains constant).
-      const dynamicUrl = baseFormUrl + "&token=" + token + "&expiry=" + expiry;
-      
-      // Generate the QR code with the dynamic URL.
-      new QRCode(qrContainer, {
-        text: dynamicUrl,
+      // Hardcode the base URL of your GitHub Pages site.
+      const baseUrl = "https://Jenil05-web.github.io/swaminarayan-1/";
+
+      // Create the absolute URLs for scan.html, linking to different Google Forms.
+      const scanURL1 = baseUrl + "scan.html?token=" + token + "&expiry=" + expiry;
+      const scanURL2 = "YOUR_NEW_GOOGLE_FORM_URL"; // Replace with the new form link
+
+      // Optionally display expiry time for debugging.
+      document.getElementById('expiryDisplay').innerText =
+        "Expires at: " + new Date(expiry).toLocaleTimeString();
+
+      // Generate the QR codes.
+      new QRCode(qrContainer1, {
+        text: scanURL1,
         width: 200,
         height: 200,
         correctLevel: QRCode.CorrectLevel.H
       });
 
-      // Optionally, display the expiry time on the page.
-      document.getElementById("expiryDisplay").innerText =
-        "QR Code expires at: " + new Date(expiry).toLocaleTimeString();
+      new QRCode(qrContainer2, {
+        text: scanURL2,
+        width: 200,
+        height: 200,
+        correctLevel: QRCode.CorrectLevel.H
+      });
 
-      console.log("Generated QR code URL:", dynamicUrl);
+      console.log("Generated QR Code URLs:", scanURL1, scanURL2);
     }
 
-    // When the window loads, generate the QR code and then refresh it every 20 seconds.
     window.onload = function() {
-      generateQRCode();
-      setInterval(generateQRCode, 20000);
+      generateQRCodes();
+      setInterval(generateQRCodes, 20000);
     };
   </script>
 </head>
 <body>
-  <h1>Dynamic Expiring QR Code</h1>
-  <p>
-    Scan the QR code below. It refreshes every 20 seconds. While the dynamic token and expiry parameters change, the base link (your Google Form) remains the same.
-  </p>
-  <div id="qrContainer"></div>
+  <h1>Scan Here for Entry Details</h1>
+  <p>Scan the QR codes below:</p>
+
+  <h3>Existing QR Code</h3>
+  <div id="qrContainer1"></div>
+
+  <h3>New QR Code</h3>
+  <div id="qrContainer2"></div>
+
   <p id="expiryDisplay"></p>
 </body>
 </html>
