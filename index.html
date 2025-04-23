@@ -2,84 +2,59 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Scan Here for Entry Details</title>
+  <title>Scan Here to exit the Chatralay</title>
   <!-- Include the QRCode.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // -------------------- First QR Code (Dynamic) -------------------- //
-    // This QR code refreshes every 20 seconds and links to scan.html.
-    function generateFirstQRCode() {
-      const firstContainer = document.getElementById("qrContainer1");
-      firstContainer.innerHTML = ""; // Clear previous QR code
+    // Generate a random token.
+    function generateToken() {
+      return Math.random().toString(36).substr(2, 9);
+    }
 
-      function generateToken() {
-        return Math.random().toString(36).substr(2, 9);
-      }
+    // Generate the QR code.
+    function generateQRCode() {
+      const qrContainer = document.getElementById("qrContainer");
+      qrContainer.innerHTML = ""; // Clear any previous QR code
+      
       const token = generateToken();
-      const expiry = Date.now() + 20000; // 20 seconds from now
-
-      // Base URL of your GitHub Pages site (adjust as necessary)
+      // Set expiry time: 20 seconds from now.
+      const expiry = Date.now() + 20000;
+      
+      // Hardcode the base URL of your GitHub Pages site.
+      // Replace <yourusername> and <repository> with your actual values.
       const baseUrl = "https://Jenil05-web.github.io/swaminarayan-1/";
-      // Construct the URL that points to scan.html with token and expiry.
+      
+      // Create the absolute URL for scan.html.
       const scanURL = baseUrl + "scan.html?token=" + token + "&expiry=" + expiry;
-
-      // Generate the QR code using the constructed URL.
-      new QRCode(firstContainer, {
+      
+      // Optionally display the expiry time for debugging.
+      document.getElementById('expiryDisplay').innerText =
+        "Expires at: " + new Date(expiry).toLocaleTimeString();
+      
+      // Generate the QR code using the absolute URL.
+      new QRCode(qrContainer, {
         text: scanURL,
         width: 200,
         height: 200,
         correctLevel: QRCode.CorrectLevel.H
       });
-
-      // Display expiry info for debugging.
-      document.getElementById("expiryDisplay").innerText =
-        "Expires at: " + new Date(expiry).toLocaleTimeString();
-
-      console.log("Generated First QR Code URL:", scanURL);
+      
+      console.log("Generated QR Code URL:", scanURL); // Debugging: check the URL in console
     }
-
-    // -------------------- Second QR Code (Static) -------------------- //
-    // This QR code is generated once and directly links to your second Google Form.
-    function generateSecondQRCode() {
-      const secondContainer = document.getElementById("qrContainer2");
-      secondContainer.innerHTML = ""; // Clear any previous content
-
-      // Replace the URL below with your second Google Form link.
-      const secondFormURL = "https://docs.google.com/forms/d/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/edit";
-      new QRCode(secondContainer, {
-        text: secondFormURL,
-        width: 200,
-        height: 200,
-        correctLevel: QRCode.CorrectLevel.H
-      });
-
-      console.log("Generated Second QR Code URL:", secondFormURL);
-    }
-
+    
     window.onload = function() {
-      // Generate the dynamic (first) QR code immediately and then every 20 seconds.
-      generateFirstQRCode();
-      setInterval(generateFirstQRCode, 20000);
-
-      // Generate the static (second) QR code once.
-      generateSecondQRCode();
+      generateQRCode();
+      setInterval(generateQRCode, 20000);
     };
+  
   </script>
 </head>
 <body>
-  <h1>Scan Here for Entry Details</h1>
-  
-  <!-- First QR Code Section -->
-  <h2>First QR Code (Dynamic)</h2>
-  <p>Scan this QR code with your mobile device to open the first Google Form.</p>
-  <div id="qrContainer1"></div>
+  <h1>Scan Here to for Entry details.</h1>
+  <p>
+    Scan the QR code with your mobile device. SHREE SWAMINARAYAN MAIN TEMPLE - VIDHYANAGAR
+  </p>
+  <div id="qrContainer"></div>
   <p id="expiryDisplay"></p>
-  
-  <hr>
-  
-  <!-- Second QR Code Section -->
-  <h2>Second QR Code (Static)</h2>
-  <p>Scan this QR code with your mobile device to open the second Google Form.</p>
-  <div id="qrContainer2"></div>
 </body>
 </html>
