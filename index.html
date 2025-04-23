@@ -11,7 +11,7 @@
       return Math.random().toString(36).substr(2, 9);
     }
 
-    // Generate the QR code.
+    // Generate the dynamic QR code (for scan.html) that refreshes every 20 seconds.
     function generateQRCode() {
       const qrContainer = document.getElementById("qrContainer");
       qrContainer.innerHTML = ""; // Clear any previous QR code
@@ -20,8 +20,7 @@
       // Set expiry time: 20 seconds from now.
       const expiry = Date.now() + 20000;
       
-      // Hardcode the base URL of your GitHub Pages site.
-      // Replace <yourusername> and <repository> with your actual values.
+      // Base URL of your GitHub Pages site.
       const baseUrl = "https://Jenil05-web.github.io/swaminarayan-1/";
       
       // Create the absolute URL for scan.html.
@@ -39,22 +38,62 @@
         correctLevel: QRCode.CorrectLevel.H
       });
       
-      console.log("Generated QR Code URL:", scanURL); // Debugging: check the URL in console
+      console.log("Generated Dynamic QR Code URL:", scanURL);
     }
-    
+
+    // Generate a static QR code for the second Google Form. This one does not refresh.
+    function generateStaticQRCode() {
+      const staticContainer = document.getElementById("qrContainerStatic");
+      staticContainer.innerHTML = ""; // Clear any previous content
+      
+      // Replace the URL below with your second Google Form link.
+      const staticFormURL = "https://docs.google.com/forms/d/e/YourSecondGoogleFormID/viewform";
+      
+      new QRCode(staticContainer, {
+        text: staticFormURL,
+        width: 200,
+        height: 200,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+      
+      console.log("Generated Static QR Code for Second Google Form:", staticFormURL);
+    }
+
     window.onload = function() {
+      // Generate the dynamic QR code immediately and refresh it every 20 seconds.
       generateQRCode();
       setInterval(generateQRCode, 20000);
+      
+      // Generate the static QR code once.
+      generateStaticQRCode();
     };
-  
   </script>
+  <style>
+    /* Arrange QR codes vertically with a dividing line */
+    .qr-section {
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Scan Here to for Entry details.</h1>
+  <h1>Scan Here for Entry details.</h1>
   <p>
     Scan the QR code with your mobile device. SHREE SWAMINARAYAN MAIN TEMPLE - VIDHYANAGAR
   </p>
-  <div id="qrContainer"></div>
-  <p id="expiryDisplay"></p>
+  
+  <!-- Dynamic QR Code Section -->
+  <div class="qr-section">
+    <h2>Dynamic QR Code (Expires every 20 seconds)</h2>
+    <div id="qrContainer"></div>
+    <p id="expiryDisplay"></p>
+  </div>
+  
+  <hr>
+  
+  <!-- Static QR Code Section -->
+  <div class="qr-section">
+    <h2>Static QR Code for Second Google Form</h2>
+    <div id="qrContainerStatic"></div>
+  </div>
 </body>
 </html>
