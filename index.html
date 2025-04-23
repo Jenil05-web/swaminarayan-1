@@ -6,12 +6,12 @@
   <!-- Include the QRCode.js library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Generate a random token.
+    let expiryTime = Date.now() + 20000; // Set expiry time for first QR code
+
     function generateToken() {
       return Math.random().toString(36).substr(2, 9);
     }
 
-    // Generate the QR codes.
     function generateQRCodes() {
       const qrContainer1 = document.getElementById("qrContainer1");
       const qrContainer2 = document.getElementById("qrContainer2");
@@ -19,20 +19,17 @@
       qrContainer2.innerHTML = ""; // Clear previous QR code
 
       const token = generateToken();
-      const expiry = Date.now() + 20000;
+      expiryTime = Date.now() + 20000; // Reset expiry time every 20 sec
 
-      // Hardcode the base URL of your GitHub Pages site.
       const baseUrl = "https://Jenil05-web.github.io/swaminarayan-1/";
+      const scanURL1 = "YOUR_NEW_GOOGLE_FORM_URL"; // Updated link for existing QR
+      const scanURL2 = "ANOTHER_GOOGLE_FORM_URL"; // Link for new QR
 
-      // Create the absolute URLs for scan.html, linking to different Google Forms.
-     const scanURL1 = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform";
-      const scanURL2 = "https://docs.google.com/forms/d/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/edit"; // Replace with the new form link
-
-      // Optionally display expiry time for debugging.
+      // Display expiry information
       document.getElementById('expiryDisplay').innerText =
-        "Expires at: " + new Date(expiry).toLocaleTimeString();
+        "Expires at: " + new Date(expiryTime).toLocaleTimeString();
 
-      // Generate the QR codes.
+      // Generate the QR codes
       new QRCode(qrContainer1, {
         text: scanURL1,
         width: 200,
@@ -50,10 +47,20 @@
       console.log("Generated QR Code URLs:", scanURL1, scanURL2);
     }
 
+    function checkExpiry() {
+      if (Date.now() > expiryTime) {
+        document.getElementById("qrContainer1").innerHTML = "<p>QR Code Expired. Generating new...</p>";
+        document.getElementById("qrContainer2").innerHTML = "<p>QR Code Expired. Generating new...</p>";
+        generateQRCodes();
+      }
+    }
+
     window.onload = function() {
       generateQRCodes();
-      setInterval(generateQRCodes, 20000);
+      setInterval(checkExpiry, 5000); // Check every 5 seconds
+      setInterval(generateQRCodes, 20000); // Generate new QR codes every 20 sec
     };
+
   </script>
 </head>
 <body>
