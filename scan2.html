@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Scan - Second Form</title>
+  <script>
+    window.onload = function() {
+      // Parse URL query parameters.
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+      const expiryStr = params.get("expiry");
+
+      // Validate the token and expiry parameter.
+      if (!token || !expiryStr) {
+        document.body.innerHTML = "<p>Error: Missing or invalid QR code parameters.</p>";
+        return;
+      }
+
+      const expiry = parseInt(expiryStr, 10);
+      const now = Date.now();
+
+      // Check if the QR code has expired.
+      if (now > expiry) {
+        document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
+        return;
+      }
+
+      // For mobile devices, immediately redirect.
+      // Alternatively, if you want to implement mobile detection like in scan.html, you can add that here.
+      window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSeuYourSecondFormLink/viewform"; 
+      // Replace the above URL with your second Google Form URL.
+    };
+  </script>
+</head>
+<body>
+  <p>Processing your scan - please wait...</p>
+</body>
+</html>
