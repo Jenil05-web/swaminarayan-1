@@ -8,25 +8,33 @@
       // Parse URL query parameters.
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get("token");
-      const expiry = parseInt(urlParams.get("expiry"), 10);
-      
+      const expiryStr = urlParams.get("expiry");
+
       // Ensure required parameters exist.
-      if (!token || !expiry) {
-        document.body.innerHTML = "<p>Error: Invalid QR code parameters.</p>";
+      if (!token || !expiryStr) {
+        document.body.innerHTML = "<p>Error: Missing scan parameters.</p>";
         return;
       }
-      
-      // Check if the current time is less than the expiry.
-      if (Date.now() > expiry) {
+
+      // Convert the expiry parameter to a number.
+      const expiry = parseInt(expiryStr, 10);
+      const now = Date.now();
+      console.log("Current time:", now, "Expiry:", expiry);
+
+      // Check if the current time has exceeded the expiry time.
+      if (now > expiry) {
+        // If expired, show an error message.
         document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
       } else {
-        // Define the new Google Form link.
-        const newFormUrl = "https://docs.google.com/forms/d/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/edit";
-
-        // Generate QR code and display it.
-        document.body.innerHTML = `<p>Scan the QR code below to access the form:</p>
-          <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(newFormUrl)}" alt="QR Code">
-          <p>If the QR code doesn't work, click <a href="${newFormUrl}">here</a> to access the form.</p>`;
+        // If the QR code is still valid, proceed to load the Google Form.
+        // Replace the below URL with your form's link if needed.
+        const formUrl = "https://docs.google.com/forms/d/e/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/viewform";
+        document.body.innerHTML = `<p>QR code is valid. Redirecting to the form...</p>`;
+        
+        // Optionally redirect after a brief delay.
+        setTimeout(() => {
+          window.location.href = formUrl;
+        }, 1500);
       }
     };
   </script>
