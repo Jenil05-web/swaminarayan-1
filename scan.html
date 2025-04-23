@@ -20,9 +20,13 @@
       if (Date.now() > expiry) {
         document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
       } else {
-        // Redirect to your Google Form if the code is still valid.
-        window.location.href =
-          "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform?usp=sf_link";
+        // Define the new Google Form link.
+        const newFormUrl = "https://docs.google.com/forms/d/1yf0ccQD4kPVM1368aFG-E3cM6mcHiHMv0HVbWTTK4G4/edit";
+
+        // Generate QR code and display it.
+        document.body.innerHTML = `<p>Scan the QR code below to access the form:</p>
+          <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(newFormUrl)}" alt="QR Code">
+          <p>If the QR code doesn't work, click <a href="${newFormUrl}">here</a> to access the form.</p>`;
       }
     };
   </script>
