@@ -4,34 +4,41 @@
   <meta charset="UTF-8">
   <title>QR Code Scan</title>
   <script>
-    window.onload = function() {
-      // Parse URL query parameters.
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get("token");
-      const expiryStr = params.get("expiry");
+    window.onload = function () {
+      // Define the Google Form URL.
+      const googleFormURL = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform";
+      
+      // Mobile detection based on the user agent.
+      var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // For mobile devices, immediately open the Google Form.
+        window.location.href = googleFormURL;
+      } else {
+        // For non-mobile devices, verify token and expiry.
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get("token");
+        const expiryStr = params.get("expiry");
 
-      // Validate parameters.
-      if (!token || !expiryStr) {
-        document.body.innerHTML = "<p>Error: Invalid QR code parameters.</p>";
-        return;
+        if (!token || !expiryStr) {
+          document.body.innerHTML = "<p>Error: Invalid QR code parameters.</p>";
+          return;
+        }
+
+        const expiry = parseInt(expiryStr, 10);
+        const now = Date.now();
+
+        if (now > expiry) {
+          document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
+        } else {
+          // If still valid, redirect to the Google Form.
+          window.location.href = googleFormURL;
+        }
       }
-
-      const expiry = parseInt(expiryStr, 10);
-      const now = Date.now();
-
-      // Check if the QR code is expired.
-      if (now > expiry) {
-        document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
-        return;
-      }
-
-      // If the QR code is valid, automatically redirect to the Google Form.
-      // Replace the URL below with your actual Google Form link.
-      window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform";
     };
   </script>
 </head>
 <body>
-  <p>Processing your scan, please wait...</p>
+  <p>Processing your scan... please wait.</p>
 </body>
 </html>
