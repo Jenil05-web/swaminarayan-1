@@ -10,21 +10,22 @@
       const token = params.get("token");
       const expiryStr = params.get("expiry");
 
-      // Check that necessary parameters exist.
+      // Validate that necessary parameters exist.
       if (!token || !expiryStr) {
         document.body.innerHTML = "<p>Error: Invalid QR code parameters.</p>";
         return;
       }
 
-      // Convert expiry to a number.
+      // Convert expiry parameter to a number.
       const expiry = parseInt(expiryStr, 10);
       const now = Date.now();
 
       // Check if the QR code has expired.
       if (now > expiry) {
+        // If expired, display an error.
         document.body.innerHTML = "<p>This QR code has expired. Please scan a fresh code.</p>";
       } else {
-        // If the QR code is still valid, redirect to the Google Form.
+        // If valid, redirect to your Google Form.
         window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform";
       }
     };
