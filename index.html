@@ -11,17 +11,17 @@
       return Math.random().toString(36).substr(2, 9);
     }
 
-    // Generate the single QR code.
-    function generateQRCode() {
-      // Get the container and clear previous code.
+    // Generate and display a QR code that expires after 20 seconds.
+    function generateAndExpireQRCode() {
       const container = document.getElementById("qrContainer");
+      // Clear any previous content.
       container.innerHTML = "";
       
-      // Generate a new token and expiration time (20 seconds from now).
+      // Generate a new token and set expiration (20 seconds from now).
       const token = generateToken();
       const expiry = Date.now() + 20000; // 20,000 milliseconds
       
-      // Constant base Google Form URL.
+      // Constant base Google Form URL (replace with your desired URL).
       const baseFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSf94jLm-MBSgrAgYRMKn9kPyonZdAB8IrTq-ODmLd0QFYHPug/viewform";
       
       // Create the dynamic URL with token and expiry parameters.
@@ -35,18 +35,22 @@
         correctLevel: QRCode.CorrectLevel.H
       });
       
-      // Optionally, display when the QR code will refresh next.
-      const nextRefresh = new Date(Date.now() + 20000);
+      // Display the expiration time on the page.
       document.getElementById("expiryDisplay").innerText =
-        "QR code will refresh at: " + nextRefresh.toLocaleTimeString();
-      
+        "QR code expires at: " + new Date(expiry).toLocaleTimeString();
+
       console.log("Generated QR code URL:", dynamicUrl);
+      
+      // After 20 seconds, expire the QR code and show an expiration message.
+      setTimeout(function(){
+        container.innerHTML = "<p>QR Code expired. Generating new one...</p>";
+        // After a short delay, generate a new QR code.
+        setTimeout(generateAndExpireQRCode, 1000);
+      }, 20000);
     }
 
-    window.onload = function() {
-      generateQRCode();
-      setInterval(generateQRCode, 20000); // Refreshes every 20 seconds
-    };
+    // When the window loads, start generating the QR code.
+    window.onload = generateAndExpireQRCode;
   </script>
 </head>
 <body>
