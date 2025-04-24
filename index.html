@@ -69,9 +69,31 @@
     };
   </script>
   <style>
-    /* Arrange QR codes vertically with a dividing line */
+    /* Styling for QR sections */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 20px;
+    }
+
+    h1, h2 {
+      color: #0056b3;
+    }
+
     .qr-section {
-      margin-bottom: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 20px auto;
+      max-width: 500px;
+    }
+
+    #expiryDisplay {
+      font-weight: bold;
+      color: #d9534f;
     }
   </style>
 </head>
@@ -83,7 +105,7 @@
   
   <!-- Dynamic QR Code Section -->
   <div class="qr-section">
-    <h2>Entry QR Code  SHREE SWAMINARAYAN MAIN TEMPLE - VIDHYANAGAR</h2>
+    <h2>Entry QR Code - SHREE SWAMINARAYAN MAIN TEMPLE - VIDHYANAGAR</h2>
     <div id="qrContainer"></div>
     <p id="expiryDisplay"></p>
   </div>
